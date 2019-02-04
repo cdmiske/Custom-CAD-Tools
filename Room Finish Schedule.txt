@@ -1,0 +1,2586 @@
+Option Explicit
+
+Sub Ch_Add_Table()
+    
+    ThisDrawing.ActiveLayer = ThisDrawing.Layers("A-Note")
+    
+    Dim minp As Variant
+    Dim maxp As Variant
+    Dim pt(2) As Double
+    Dim acTable As AcadTable
+    
+    Set acTable = ThisDrawing.ModelSpace.AddTable(pt, 30, 26, 13.75, 13.25)
+    
+    With acTable
+        .RegenerateTableSuppressed = True
+        .RecomputeTableBlock False
+        .TitleSuppressed = False
+        .HeaderSuppressed = False
+        .SetTextStyle AcRowType.acTitleRow, "Arial"
+        .SetTextStyle AcRowType.acHeaderRow, "Wendys"
+        .SetTextStyle AcRowType.acDataRow, "Wendys"
+        Dim i As Double, j As Double
+        Dim col As New AcadAcCmColor
+        Dim l As Integer
+        Dim cell As Double
+        col.SetRGB 255, 0, 255
+
+'=======================================================================================================
+    'Title
+        .SetRowHeight i, 24
+        .SetCellTextHeight i, j, 7.5
+        .SetCellAlignment i, j, acMiddleCenter
+        .SetCellType i, j, acTextCell
+        .SetText 0, 0, "ROOM FINISH SCHEDULE"
+        
+        i = i + 1
+        
+'=======================================================================================================
+    'Header
+        For j = 0 To .Columns - 1
+        .SetColumnWidth 0, 17.25
+        .SetColumnWidth 1, 51.9375
+        .MergeCells i, i, 2, 5
+        .MergeCells i, i, 6, 9
+        .MergeCells i, i, 10, 18
+        .MergeCells i, i, 19, 24
+        .SetColumnWidth 25, 43.375
+        .SetCellTextHeight i, j, 4.5
+        .SetCellAlignment i, j, acMiddleCenter
+        .SetCellType i, j, acTextCell
+        .SetText i, 1, "ROOM"
+        .SetText i, 2, "FLOOR"
+        .SetText i, 6, "BASE"
+        .SetText i, 10, "WALLS"
+        .SetText i, 19, "CEILING"
+        Next
+        
+        i = i + 1
+        
+'=======================================================================================================
+    'Data rows
+        For j = 0 To .Columns - 1
+        
+        .SetCellTextHeight i, j, 4.5
+        .SetCellAlignment 2, j, acBottomCenter
+        .VertCellMargin = 3
+        .SetCellType i, j, acTextCell
+        .SetTextRotation 2, j, acDegrees090
+        .SetRowHeight 2, 81.1875
+        .SetColumnWidth 24, 19.1275
+        .SetText 2, 0, "SPACE DESIGNATION"
+        .SetText 2, 1, ""
+        .SetText 2, 2, "NEW PORCELAIN TILE"
+        .SetText 2, 3, "QUARRY TILE"
+        .SetText 2, 4, ""
+        .SetText 2, 5, "EXISTING TO REMAIN"
+        .SetText 2, 6, ""
+        .SetText 2, 7, "COVED RESILENT"
+        .SetText 2, 8, "NEW PORCELAIN TILE"
+        .SetText 2, 9, "EXISTING TO REMAIN"
+        .SetText 2, 10, "VINYL TILE"
+        .SetText 2, 11, "NEW PORCELAIN TILE"
+        .SetText 2, 12, "EPOXY PAINT"
+        .SetText 2, 13, "LAMINATE PANELING"
+        .SetText 2, 14, "PAINT ABOVE NEW WALL TILE"
+        .SetText 2, 15, "F.R.P."
+        .SetText 2, 16, "VINYL WALL COVERING"
+        .SetText 2, 17, "EXISTING WALL TILE TO REMAIN"
+        .SetText 2, 18, "EXISTING TO REMAIN U.N.O."
+        .SetText 2, 19, "NEW SUSPENDED ACOUSTIC"
+        .SetText 2, 20, "NEW SUSPENDED VINYL"
+        .SetText 2, 21, "EXISTING DRYWALL - PAINTED"
+        .SetText 2, 22, "EXISTING TO REMAIN"
+        .SetText 2, 23, "NEW DRYWALL - PAINTED"
+        .SetText 2, 24, "HEIGHT"
+        .SetText 2, 25, "NOTES"
+        
+    Next
+    
+    i = i + 1
+    
+'=======================================================================================================
+'100 Vestibule
+    Room.CheckBox1.Value = False
+    Room.CheckBox2.Value = False
+    Room.CheckBox1.Visible = True
+    Room.CheckBox2.Visible = True
+    Room.CheckBox1.Caption = "Vestibule"
+    Room.CheckBox2.Caption = "Vestibule (2)"
+    Room.show
+    
+    'Space Designation and Room Name Cells
+    If Room.CheckBox1.Value = True And Room.CheckBox2.Value = False Then
+        For j = 0 To 1
+            .SetCellTextHeight i, j, 4.5
+            .SetCellAlignment i, j, acMiddleCenter
+            .SetCellType i, j, acTextCell
+            .SetText i, 0, "100"
+            .SetText i, 1, "VESTIBULE"
+        Next
+        
+'=======================================================================================================
+    'Floor Finish Cells
+        Floor.Porcelain.Value = False
+        Floor.Quarry.Value = False
+        Floor.Existing.Value = False
+        Floor.show
+        For j = 2 To 5
+            .SetCellTextHeight i, j, 4.5
+            .SetCellAlignment i, j, acMiddleCenter
+            .SetCellType i, j, acTextCell
+            If Floor.Porcelain.Value = True Then
+                .SetText i, 2, "\U+25CF"
+            ElseIf Floor.Quarry.Value = True Then
+                .SetText i, 3, "\U+25CF"
+            ElseIf Floor.Existing.Value = True Then
+                .SetText i, 5, "\U+25CF"
+            End If
+        Next
+        
+'=======================================================================================================
+    'Base Finish Cells
+        Base.Coved.Value = False
+        Base.Porcelain.Value = False
+        Base.Existing.Value = False
+        Base.show
+        For j = 6 To 9
+            .SetCellTextHeight i, j, 4.5
+            .SetCellAlignment i, j, acMiddleCenter
+            .SetCellType i, j, acTextCell
+            If Base.Coved.Value = True Then
+                .SetText i, 7, "\U+25CF"
+            ElseIf Base.Porcelain.Value = True Then
+                .SetText i, 8, "\U+25CF"
+            ElseIf Base.Existing.Value = True Then
+                .SetText i, 9, "\U+25CF"
+            End If
+        Next
+        
+'=======================================================================================================
+    'Wall Finish Cells
+        Walls.Vinyl.Value = False
+        Walls.Porcelain.Value = False
+        Walls.Epoxy.Value = False
+        Walls.Laminate.Value = False
+        Walls.Paint.Value = False
+        Walls.FRP.Value = False
+        Walls.Wallpaper.Value = False
+        Walls.Existing_Tile.Value = False
+        Walls.Existing.Value = False
+        Walls.show
+        For j = 10 To 18
+            .SetCellTextHeight i, j, 4.5
+            .SetCellAlignment i, j, acMiddleCenter
+            .SetCellType i, j, acTextCell
+            If Walls.Vinyl.Value = True Then
+                .SetText i, 10, "\U+25CF"
+            End If
+            If Walls.Porcelain.Value = True Then
+                .SetText i, 11, "\U+25CF"
+            End If
+            If Walls.Epoxy.Value = True Then
+                .SetText i, 12, "\U+25CF"
+            End If
+            If Walls.Laminate.Value = True Then
+                .SetText i, 13, "\U+25CF"
+            End If
+            If Walls.Paint.Value = True Then
+                .SetText i, 14, "\U+25CF"
+            End If
+            If Walls.FRP.Value = True Then
+                .SetText i, 15, "\U+25CF"
+            End If
+            If Walls.Wallpaper.Value = True Then
+                .SetText i, 16, "\U+25CF"
+            End If
+            If Walls.Existing_Tile.Value = True Then
+                .SetText i, 17, "\U+25CF"
+            End If
+            If Walls.Existing.Value = True Then
+                .SetText i, 18, "\U+25CF"
+            End If
+            
+        Next
+        
+'=======================================================================================================
+    'Ceiling Finish Cells
+        Ceiling.Acoustic.Value = False
+        Ceiling.Vinyl.Value = False
+        Ceiling.Exist_Drywall.Value = False
+        Ceiling.Existing.Value = False
+        Ceiling.New_Drywall.Value = False
+        Ceiling.show
+        For j = 19 To 23
+            .SetCellTextHeight i, j, 4.5
+            .SetCellAlignment i, j, acMiddleCenter
+            .SetCellType i, j, acTextCell
+            If Ceiling.Acoustic.Value = True Then
+                .SetText i, 19, "\U+25CF"
+            End If
+            If Ceiling.Vinyl.Value = True Then
+                .SetText i, 20, "\U+25CF"
+            End If
+            If Ceiling.Exist_Drywall.Value = True Then
+                .SetText i, 21, "\U+25CF"
+            End If
+            If Ceiling.Existing.Value = True Then
+                .SetText i, 22, "\U+25CF"
+            End If
+            If Ceiling.New_Drywall.Value = True Then
+                .SetText i, 23, "\U+25CF"
+            End If
+        Next
+    'Ceiling Height Cell
+        .SetCellTextHeight i, 24, 4.5
+        .SetCellAlignment i, 24, acMiddleCenter
+        .SetCellType i, 24, acTextCell
+        .SetText i, 24, "EXIST."
+        
+'=======================================================================================================
+    'Populates the notes
+    
+        .SetCellTextHeight i, 25, 4.5
+        .SetCellAlignment i, 25, acMiddleLeft
+        .SetCellType i, 25, acTextCell
+        .HorzCellMargin = 3
+        If Room.CheckBox1.Value = True Then
+            .SetText i, 25, "1"
+        End If
+        .GetCellValue i, 25 = cell
+        If Ceiling.Acoustic.Value = True Then
+            .SetText i, 25, (cell) & ",5"
+        End If
+     
+        i = i + 1
+        
+'=======================================================================================================
+'For A and B room set
+    ElseIf Room.CheckBox1.Value = True And Room.CheckBox2.Value = True Then
+        Floor.Porcelain.Value = False
+        Floor.Quarry.Value = False
+        Floor.Existing.Value = False
+        Floor.show
+        Base.Coved.Value = False
+        Base.Porcelain.Value = False
+        Base.Existing.Value = False
+        Base.show
+        Walls.Vinyl.Value = False
+        Walls.Porcelain.Value = False
+        Walls.Epoxy.Value = False
+        Walls.Laminate.Value = False
+        Walls.Paint.Value = False
+        Walls.FRP.Value = False
+        Walls.Wallpaper.Value = False
+        Walls.Existing_Tile.Value = False
+        Walls.Existing.Value = False
+        Walls.show
+        Ceiling.Acoustic.Value = False
+        Ceiling.Vinyl.Value = False
+        Ceiling.Exist_Drywall.Value = False
+        Ceiling.Existing.Value = False
+        Ceiling.New_Drywall.Value = False
+        Ceiling.show
+        For i = i To i + 1
+            l = l + 1
+            For j = 0 To .Columns - 1
+            .SetCellTextHeight i, j, 4.5
+            .SetCellAlignment i, j, acMiddleCenter
+            .SetCellType i, j, acTextCell
+            .SetText i, 0, "100" & Chr$(64 + l)
+            .SetText i, 1, "VESTIBULE"
+        'Floor Finish Cells
+            If Floor.Porcelain.Value = True Then
+                .SetText i, 2, "\U+25CF"
+            ElseIf Floor.Quarry.Value = True Then
+                .SetText i, 3, "\U+25CF"
+            ElseIf Floor.Existing.Value = True Then
+                .SetText i, 5, "\U+25CF"
+            End If
+        'Base Finish Cells
+            If Base.Coved.Value = True Then
+                .SetText i, 7, "\U+25CF"
+            ElseIf Base.Porcelain.Value = True Then
+                .SetText i, 8, "\U+25CF"
+            ElseIf Base.Existing.Value = True Then
+                .SetText i, 9, "\U+25CF"
+            End If
+        'Wall Finish Cells
+            If Walls.Vinyl.Value = True Then
+                .SetText i, 10, "\U+25CF"
+            End If
+            If Walls.Porcelain.Value = True Then
+                .SetText i, 11, "\U+25CF"
+            End If
+            If Walls.Epoxy.Value = True Then
+                .SetText i, 12, "\U+25CF"
+            End If
+            If Walls.Laminate.Value = True Then
+                .SetText i, 13, "\U+25CF"
+            End If
+            If Walls.Paint.Value = True Then
+                .SetText i, 14, "\U+25CF"
+            End If
+            If Walls.FRP.Value = True Then
+                .SetText i, 15, "\U+25CF"
+            End If
+            If Walls.Wallpaper.Value = True Then
+                .SetText i, 16, "\U+25CF"
+            End If
+            If Walls.Existing_Tile.Value = True Then
+                .SetText i, 17, "\U+25CF"
+            End If
+            If Walls.Existing.Value = True Then
+                .SetText i, 18, "\U+25CF"
+            End If
+        'Ceiling Finish Cells
+            If Ceiling.Acoustic.Value = True Then
+                .SetText i, 19, "\U+25CF"
+            End If
+            If Ceiling.Vinyl.Value = True Then
+                .SetText i, 20, "\U+25CF"
+            End If
+            If Ceiling.Exist_Drywall.Value = True Then
+                .SetText i, 21, "\U+25CF"
+            End If
+            If Ceiling.Existing.Value = True Then
+                .SetText i, 22, "\U+25CF"
+            End If
+            If Ceiling.New_Drywall.Value = True Then
+                .SetText i, 23, "\U+25CF"
+            End If
+        'Ceiling Height Cell
+            .SetText i, 24, "EXIST."
+            Next
+        Next
+    l = 0
+    End If
+    
+'=======================================================================================================
+'101 Dining Area
+    Room.CheckBox1.Value = False
+    Room.CheckBox2.Value = False
+    Room.CheckBox1.Visible = True
+    Room.CheckBox2.Visible = True
+    Room.CheckBox1.Caption = "Dining Room"
+    Room.CheckBox2.Caption = "Dining Room (2)"
+    Room.show
+    
+    'Space Designation and Room Name Cells
+    If Room.CheckBox1.Value = True And Room.CheckBox2.Value = False Then
+        For j = 0 To 1
+            .SetCellTextHeight i, j, 4.5
+            .SetCellAlignment i, j, acMiddleCenter
+            .SetCellType i, j, acTextCell
+            .SetText i, 0, "101"
+            .SetText i, 1, "DINING AREA"
+        Next
+        
+'=======================================================================================================
+    'Floor Finish Cells
+        Floor.Porcelain.Value = False
+        Floor.Quarry.Value = False
+        Floor.Existing.Value = False
+        Floor.show
+        For j = 2 To 5
+            .SetCellTextHeight i, j, 4.5
+            .SetCellAlignment i, j, acMiddleCenter
+            .SetCellType i, j, acTextCell
+            If Floor.Porcelain.Value = True Then
+                .SetText i, 2, "\U+25CF"
+            ElseIf Floor.Quarry.Value = True Then
+                .SetText i, 3, "\U+25CF"
+            ElseIf Floor.Existing.Value = True Then
+                .SetText i, 5, "\U+25CF"
+            End If
+        Next
+        
+'=======================================================================================================
+    'Base Finish Cells
+        Base.Coved.Value = False
+        Base.Porcelain.Value = False
+        Base.Existing.Value = False
+        Base.show
+        For j = 6 To 9
+            .SetCellTextHeight i, j, 4.5
+            .SetCellAlignment i, j, acMiddleCenter
+            .SetCellType i, j, acTextCell
+            If Base.Coved.Value = True Then
+                .SetText i, 7, "\U+25CF"
+            ElseIf Base.Porcelain.Value = True Then
+                .SetText i, 8, "\U+25CF"
+            ElseIf Base.Existing.Value = True Then
+                .SetText i, 9, "\U+25CF"
+            End If
+        Next
+        
+'=======================================================================================================
+    'Wall Finish Cells
+        Walls.Vinyl.Value = False
+        Walls.Porcelain.Value = False
+        Walls.Epoxy.Value = False
+        Walls.Laminate.Value = False
+        Walls.Paint.Value = False
+        Walls.FRP.Value = False
+        Walls.Wallpaper.Value = False
+        Walls.Existing_Tile.Value = False
+        Walls.Existing.Value = False
+        Walls.show
+        For j = 10 To 18
+            .SetCellTextHeight i, j, 4.5
+            .SetCellAlignment i, j, acMiddleCenter
+            .SetCellType i, j, acTextCell
+            If Walls.Vinyl.Value = True Then
+                .SetText i, 10, "\U+25CF"
+            End If
+            If Walls.Porcelain.Value = True Then
+                .SetText i, 11, "\U+25CF"
+            End If
+            If Walls.Epoxy.Value = True Then
+                .SetText i, 12, "\U+25CF"
+            End If
+            If Walls.Laminate.Value = True Then
+                .SetText i, 13, "\U+25CF"
+            End If
+            If Walls.Paint.Value = True Then
+                .SetText i, 14, "\U+25CF"
+            End If
+            If Walls.FRP.Value = True Then
+                .SetText i, 15, "\U+25CF"
+            End If
+            If Walls.Wallpaper.Value = True Then
+                .SetText i, 16, "\U+25CF"
+            End If
+            If Walls.Existing_Tile.Value = True Then
+                .SetText i, 17, "\U+25CF"
+            End If
+            If Walls.Existing.Value = True Then
+                .SetText i, 18, "\U+25CF"
+            End If
+            
+        Next
+        
+'=======================================================================================================
+    'Ceiling Finish Cells
+        Ceiling.Acoustic.Value = False
+        Ceiling.Vinyl.Value = False
+        Ceiling.Exist_Drywall.Value = False
+        Ceiling.Existing.Value = False
+        Ceiling.New_Drywall.Value = False
+        Ceiling.show
+        For j = 19 To 23
+            .SetCellTextHeight i, j, 4.5
+            .SetCellAlignment i, j, acMiddleCenter
+            .SetCellType i, j, acTextCell
+            If Ceiling.Acoustic.Value = True Then
+                .SetText i, 19, "\U+25CF"
+            End If
+            If Ceiling.Vinyl.Value = True Then
+                .SetText i, 20, "\U+25CF"
+            End If
+            If Ceiling.Exist_Drywall.Value = True Then
+                .SetText i, 21, "\U+25CF"
+            End If
+            If Ceiling.Existing.Value = True Then
+                .SetText i, 22, "\U+25CF"
+            End If
+            If Ceiling.New_Drywall.Value = True Then
+                .SetText i, 23, "\U+25CF"
+            End If
+        Next
+    'Ceiling Height Cell
+        .SetCellTextHeight i, 24, 4.5
+        .SetCellAlignment i, 24, acMiddleCenter
+        .SetCellType i, 24, acTextCell
+        .SetText i, 24, "EXIST."
+        
+'=======================================================================================================
+    'Populates the notes
+        If Room.CheckBox1.Value = True Then
+            .SetText i, 25, "1"
+        End If
+        'If Ceiling.Acoustic.Value = True Then
+            
+        'End If
+        
+        i = i + 1
+        
+'=======================================================================================================
+'For A and B room set
+    ElseIf Room.CheckBox1.Value = True And Room.CheckBox2.Value = True Then
+        Floor.Porcelain.Value = False
+        Floor.Quarry.Value = False
+        Floor.Existing.Value = False
+        Floor.show
+        Base.Coved.Value = False
+        Base.Porcelain.Value = False
+        Base.Existing.Value = False
+        Base.show
+        Walls.Vinyl.Value = False
+        Walls.Porcelain.Value = False
+        Walls.Epoxy.Value = False
+        Walls.Laminate.Value = False
+        Walls.Paint.Value = False
+        Walls.FRP.Value = False
+        Walls.Wallpaper.Value = False
+        Walls.Existing_Tile.Value = False
+        Walls.Existing.Value = False
+        Walls.show
+        Ceiling.Acoustic.Value = False
+        Ceiling.Vinyl.Value = False
+        Ceiling.Exist_Drywall.Value = False
+        Ceiling.Existing.Value = False
+        Ceiling.New_Drywall.Value = False
+        Ceiling.show
+        For i = i To i + 1
+            l = l + 1
+            For j = 0 To .Columns - 1
+            .SetCellTextHeight i, j, 4.5
+            .SetCellAlignment i, j, acMiddleCenter
+            .SetCellType i, j, acTextCell
+            .SetText i, 0, "101" & Chr$(64 + l)
+            .SetText i, 1, "DINING AREA"
+        'Floor Finish Cells
+            If Floor.Porcelain.Value = True Then
+                .SetText i, 2, "\U+25CF"
+            ElseIf Floor.Quarry.Value = True Then
+                .SetText i, 3, "\U+25CF"
+            ElseIf Floor.Existing.Value = True Then
+                .SetText i, 5, "\U+25CF"
+            End If
+        'Base Finish Cells
+            If Base.Coved.Value = True Then
+                .SetText i, 7, "\U+25CF"
+            ElseIf Base.Porcelain.Value = True Then
+                .SetText i, 8, "\U+25CF"
+            ElseIf Base.Existing.Value = True Then
+                .SetText i, 9, "\U+25CF"
+            End If
+        'Wall Finish Cells
+            If Walls.Vinyl.Value = True Then
+                .SetText i, 10, "\U+25CF"
+            End If
+            If Walls.Porcelain.Value = True Then
+                .SetText i, 11, "\U+25CF"
+            End If
+            If Walls.Epoxy.Value = True Then
+                .SetText i, 12, "\U+25CF"
+            End If
+            If Walls.Laminate.Value = True Then
+                .SetText i, 13, "\U+25CF"
+            End If
+            If Walls.Paint.Value = True Then
+                .SetText i, 14, "\U+25CF"
+            End If
+            If Walls.FRP.Value = True Then
+                .SetText i, 15, "\U+25CF"
+            End If
+            If Walls.Wallpaper.Value = True Then
+                .SetText i, 16, "\U+25CF"
+            End If
+            If Walls.Existing_Tile.Value = True Then
+                .SetText i, 17, "\U+25CF"
+            End If
+            If Walls.Existing.Value = True Then
+                .SetText i, 18, "\U+25CF"
+            End If
+        'Ceiling Finish Cells
+            If Ceiling.Acoustic.Value = True Then
+                .SetText i, 19, "\U+25CF"
+            End If
+            If Ceiling.Vinyl.Value = True Then
+                .SetText i, 20, "\U+25CF"
+            End If
+            If Ceiling.Exist_Drywall.Value = True Then
+                .SetText i, 21, "\U+25CF"
+            End If
+            If Ceiling.Existing.Value = True Then
+                .SetText i, 22, "\U+25CF"
+            End If
+            If Ceiling.New_Drywall.Value = True Then
+                .SetText i, 23, "\U+25CF"
+            End If
+        'Ceiling Height Cell
+            .SetText i, 24, "EXIST."
+            
+            Next
+        Next
+    l = 0
+    End If
+    
+'=======================================================================================================
+'102 Service Closet
+    Room.CheckBox1.Caption = "Service Closet"
+    Room.CheckBox1.Value = False
+    Room.CheckBox2.Visible = False
+    Room.CheckBox2.Value = False
+    Room.show
+
+    'Space Designation and Room Name Cells
+    If Room.CheckBox1.Value = True Then
+        For j = 0 To 1
+            .SetCellTextHeight i, j, 4.5
+            .SetCellAlignment i, j, acMiddleCenter
+            .SetCellType i, j, acTextCell
+            .SetText i, 0, "102"
+            .SetText i, 1, "SERVICE CLOSET"
+        Next
+        
+'=======================================================================================================
+    'Floor Finish Cells
+        Floor.Porcelain.Value = False
+        Floor.Quarry.Value = False
+        Floor.Existing.Value = False
+        Floor.show
+        For j = 2 To 5
+            .SetCellTextHeight i, j, 4.5
+            .SetCellAlignment i, j, acMiddleCenter
+            .SetCellType i, j, acTextCell
+            If Floor.Porcelain.Value = True Then
+                .SetText i, 2, "\U+25CF"
+            ElseIf Floor.Quarry.Value = True Then
+                .SetText i, 3, "\U+25CF"
+            ElseIf Floor.Existing.Value = True Then
+                .SetText i, 5, "\U+25CF"
+            End If
+        Next
+            
+'=======================================================================================================
+    'Base Finish Cells
+        Base.Coved.Value = False
+        Base.Porcelain.Value = False
+        Base.Existing.Value = False
+        Base.show
+        For j = 6 To 9
+            .SetCellTextHeight i, j, 4.5
+            .SetCellAlignment i, j, acMiddleCenter
+            .SetCellType i, j, acTextCell
+            If Base.Coved.Value = True Then
+                .SetText i, 7, "\U+25CF"
+            ElseIf Base.Porcelain.Value = True Then
+                .SetText i, 8, "\U+25CF"
+            ElseIf Base.Existing.Value = True Then
+                .SetText i, 9, "\U+25CF"
+            End If
+        Next
+        
+'=======================================================================================================
+    'Wall Finish Cells
+        Walls.Vinyl.Value = False
+        Walls.Porcelain.Value = False
+        Walls.Epoxy.Value = False
+        Walls.Laminate.Value = False
+        Walls.Paint.Value = False
+        Walls.FRP.Value = False
+        Walls.Wallpaper.Value = False
+        Walls.Existing_Tile.Value = False
+        Walls.Existing.Value = False
+        Walls.show
+        For j = 10 To 18
+            .SetCellTextHeight i, j, 4.5
+            .SetCellAlignment i, j, acMiddleCenter
+            .SetCellType i, j, acTextCell
+            If Walls.Vinyl.Value = True Then
+                .SetText i, 10, "\U+25CF"
+            End If
+            If Walls.Porcelain.Value = True Then
+                .SetText i, 11, "\U+25CF"
+            End If
+            If Walls.Epoxy.Value = True Then
+                .SetText i, 12, "\U+25CF"
+            End If
+            If Walls.Laminate.Value = True Then
+                .SetText i, 13, "\U+25CF"
+            End If
+            If Walls.Paint.Value = True Then
+                .SetText i, 14, "\U+25CF"
+            End If
+            If Walls.FRP.Value = True Then
+                .SetText i, 15, "\U+25CF"
+            End If
+            If Walls.Wallpaper.Value = True Then
+                .SetText i, 16, "\U+25CF"
+            End If
+            If Walls.Existing_Tile.Value = True Then
+                .SetText i, 17, "\U+25CF"
+            End If
+            If Walls.Existing.Value = True Then
+                .SetText i, 18, "\U+25CF"
+            End If
+        Next
+    
+'=======================================================================================================
+    'Ceiling Finish Cells
+        Ceiling.Acoustic.Value = False
+        Ceiling.Vinyl.Value = False
+        Ceiling.Exist_Drywall.Value = False
+        Ceiling.Existing.Value = False
+        Ceiling.New_Drywall.Value = False
+        Ceiling.show
+        For j = 19 To 23
+            .SetCellTextHeight i, j, 4.5
+            .SetCellAlignment i, j, acMiddleCenter
+            .SetCellType i, j, acTextCell
+            If Ceiling.Acoustic.Value = True Then
+                .SetText i, 19, "\U+25CF"
+            End If
+            If Ceiling.Vinyl.Value = True Then
+                .SetText i, 20, "\U+25CF"
+            End If
+            If Ceiling.Exist_Drywall.Value = True Then
+                .SetText i, 21, "\U+25CF"
+            End If
+            If Ceiling.Existing.Value = True Then
+                .SetText i, 22, "\U+25CF"
+            End If
+            If Ceiling.New_Drywall.Value = True Then
+                .SetText i, 23, "\U+25CF"
+            End If
+        Next
+    'Ceiling Height Cell
+        .SetCellTextHeight i, 24, 4.5
+        .SetCellAlignment i, 24, acMiddleCenter
+        .SetCellType i, 24, acTextCell
+        .SetText i, 24, "EXIST."
+        
+'=======================================================================================================
+    'Populates the notes
+    
+'=======================================================================================================
+    'Indents to Next Row
+        i = i + 1
+        
+    End If
+
+'=======================================================================================================
+'103 Women's Room
+    Room.CheckBox1.Caption = "Women's Room"
+    Room.CheckBox1.Value = False
+    Room.CheckBox2.Visible = False
+    Room.CheckBox2.Value = False
+    Room.show
+
+    'Space Designation and Room Name Cells
+    If Room.CheckBox1.Value = True Then
+        For j = 0 To 1
+            .SetCellTextHeight i, j, 4.5
+            .SetCellAlignment i, j, acMiddleCenter
+            .SetCellType i, j, acTextCell
+            .SetText i, 0, "103"
+            .SetText i, 1, "WOMEN'S ROOM"
+        Next
+        
+'=======================================================================================================
+    'Floor Finish Cells
+        Floor.Porcelain.Value = False
+        Floor.Quarry.Value = False
+        Floor.Existing.Value = False
+        Floor.show
+        For j = 2 To 5
+            .SetCellTextHeight i, j, 4.5
+            .SetCellAlignment i, j, acMiddleCenter
+            .SetCellType i, j, acTextCell
+            If Floor.Porcelain.Value = True Then
+                .SetText i, 2, "\U+25CF"
+            ElseIf Floor.Quarry.Value = True Then
+                .SetText i, 3, "\U+25CF"
+            ElseIf Floor.Existing.Value = True Then
+                .SetText i, 5, "\U+25CF"
+            End If
+        Next
+            
+'=======================================================================================================
+    'Base Finish Cells
+        Base.Coved.Value = False
+        Base.Porcelain.Value = False
+        Base.Existing.Value = False
+        Base.show
+        For j = 6 To 9
+            .SetCellTextHeight i, j, 4.5
+            .SetCellAlignment i, j, acMiddleCenter
+            .SetCellType i, j, acTextCell
+            If Base.Coved.Value = True Then
+                .SetText i, 7, "\U+25CF"
+            ElseIf Base.Porcelain.Value = True Then
+                .SetText i, 8, "\U+25CF"
+            ElseIf Base.Existing.Value = True Then
+                .SetText i, 9, "\U+25CF"
+            End If
+        Next
+        
+'=======================================================================================================
+    'Wall Finish Cells
+        Walls.Vinyl.Value = False
+        Walls.Porcelain.Value = False
+        Walls.Epoxy.Value = False
+        Walls.Laminate.Value = False
+        Walls.Paint.Value = False
+        Walls.FRP.Value = False
+        Walls.Wallpaper.Value = False
+        Walls.Existing_Tile.Value = False
+        Walls.Existing.Value = False
+        Walls.show
+        For j = 10 To 18
+            .SetCellTextHeight i, j, 4.5
+            .SetCellAlignment i, j, acMiddleCenter
+            .SetCellType i, j, acTextCell
+            If Walls.Vinyl.Value = True Then
+                .SetText i, 10, "\U+25CF"
+            End If
+            If Walls.Porcelain.Value = True Then
+                .SetText i, 11, "\U+25CF"
+            End If
+            If Walls.Epoxy.Value = True Then
+                .SetText i, 12, "\U+25CF"
+            End If
+            If Walls.Laminate.Value = True Then
+                .SetText i, 13, "\U+25CF"
+            End If
+            If Walls.Paint.Value = True Then
+                .SetText i, 14, "\U+25CF"
+            End If
+            If Walls.FRP.Value = True Then
+                .SetText i, 15, "\U+25CF"
+            End If
+            If Walls.Wallpaper.Value = True Then
+                .SetText i, 16, "\U+25CF"
+            End If
+            If Walls.Existing_Tile.Value = True Then
+                .SetText i, 17, "\U+25CF"
+            End If
+            If Walls.Existing.Value = True Then
+                .SetText i, 18, "\U+25CF"
+            End If
+        Next
+    
+'=======================================================================================================
+    'Ceiling Finish Cells
+        Ceiling.Acoustic.Value = False
+        Ceiling.Vinyl.Value = False
+        Ceiling.Exist_Drywall.Value = False
+        Ceiling.Existing.Value = False
+        Ceiling.New_Drywall.Value = False
+        Ceiling.show
+        For j = 19 To 23
+            .SetCellTextHeight i, j, 4.5
+            .SetCellAlignment i, j, acMiddleCenter
+            .SetCellType i, j, acTextCell
+            If Ceiling.Acoustic.Value = True Then
+                .SetText i, 19, "\U+25CF"
+            End If
+            If Ceiling.Vinyl.Value = True Then
+                .SetText i, 20, "\U+25CF"
+            End If
+            If Ceiling.Exist_Drywall.Value = True Then
+                .SetText i, 21, "\U+25CF"
+            End If
+            If Ceiling.Existing.Value = True Then
+                .SetText i, 22, "\U+25CF"
+            End If
+            If Ceiling.New_Drywall.Value = True Then
+                .SetText i, 23, "\U+25CF"
+            End If
+        Next
+    'Ceiling Height Cell
+        .SetCellTextHeight i, 24, 4.5
+        .SetCellAlignment i, 24, acMiddleCenter
+        .SetCellType i, 24, acTextCell
+        .SetText i, 24, "EXIST."
+        
+'=======================================================================================================
+    'Populates the notes
+    
+'=======================================================================================================
+    'Indents to Next Row
+        i = i + 1
+        
+    End If
+
+'=======================================================================================================
+'104 Men's Room
+    Room.CheckBox1.Caption = "Men's Room"
+    Room.CheckBox1.Value = False
+    Room.CheckBox2.Visible = False
+    Room.CheckBox2.Value = False
+    Room.show
+
+    'Space Designation and Room Name Cells
+    If Room.CheckBox1.Value = True Then
+        For j = 0 To 1
+            .SetCellTextHeight i, j, 4.5
+            .SetCellAlignment i, j, acMiddleCenter
+            .SetCellType i, j, acTextCell
+            .SetText i, 0, "104"
+            .SetText i, 1, "MEN'S ROOM"
+        Next
+        
+'=======================================================================================================
+    'Floor Finish Cells
+        Floor.Porcelain.Value = False
+        Floor.Quarry.Value = False
+        Floor.Existing.Value = False
+        Floor.show
+        For j = 2 To 5
+            .SetCellTextHeight i, j, 4.5
+            .SetCellAlignment i, j, acMiddleCenter
+            .SetCellType i, j, acTextCell
+            If Floor.Porcelain.Value = True Then
+                .SetText i, 2, "\U+25CF"
+            ElseIf Floor.Quarry.Value = True Then
+                .SetText i, 3, "\U+25CF"
+            ElseIf Floor.Existing.Value = True Then
+                .SetText i, 5, "\U+25CF"
+            End If
+        Next
+            
+'=======================================================================================================
+    'Base Finish Cells
+        Base.Coved.Value = False
+        Base.Porcelain.Value = False
+        Base.Existing.Value = False
+        Base.show
+        For j = 6 To 9
+            .SetCellTextHeight i, j, 4.5
+            .SetCellAlignment i, j, acMiddleCenter
+            .SetCellType i, j, acTextCell
+            If Base.Coved.Value = True Then
+                .SetText i, 7, "\U+25CF"
+            ElseIf Base.Porcelain.Value = True Then
+                .SetText i, 8, "\U+25CF"
+            ElseIf Base.Existing.Value = True Then
+                .SetText i, 9, "\U+25CF"
+            End If
+        Next
+        
+'=======================================================================================================
+    'Wall Finish Cells
+        Walls.Vinyl.Value = False
+        Walls.Porcelain.Value = False
+        Walls.Epoxy.Value = False
+        Walls.Laminate.Value = False
+        Walls.Paint.Value = False
+        Walls.FRP.Value = False
+        Walls.Wallpaper.Value = False
+        Walls.Existing_Tile.Value = False
+        Walls.Existing.Value = False
+        Walls.show
+        For j = 10 To 18
+            .SetCellTextHeight i, j, 4.5
+            .SetCellAlignment i, j, acMiddleCenter
+            .SetCellType i, j, acTextCell
+            If Walls.Vinyl.Value = True Then
+                .SetText i, 10, "\U+25CF"
+            End If
+            If Walls.Porcelain.Value = True Then
+                .SetText i, 11, "\U+25CF"
+            End If
+            If Walls.Epoxy.Value = True Then
+                .SetText i, 12, "\U+25CF"
+            End If
+            If Walls.Laminate.Value = True Then
+                .SetText i, 13, "\U+25CF"
+            End If
+            If Walls.Paint.Value = True Then
+                .SetText i, 14, "\U+25CF"
+            End If
+            If Walls.FRP.Value = True Then
+                .SetText i, 15, "\U+25CF"
+            End If
+            If Walls.Wallpaper.Value = True Then
+                .SetText i, 16, "\U+25CF"
+            End If
+            If Walls.Existing_Tile.Value = True Then
+                .SetText i, 17, "\U+25CF"
+            End If
+            If Walls.Existing.Value = True Then
+                .SetText i, 18, "\U+25CF"
+            End If
+        Next
+    
+'=======================================================================================================
+    'Ceiling Finish Cells
+        Ceiling.Acoustic.Value = False
+        Ceiling.Vinyl.Value = False
+        Ceiling.Exist_Drywall.Value = False
+        Ceiling.Existing.Value = False
+        Ceiling.New_Drywall.Value = False
+        Ceiling.show
+        For j = 19 To 23
+            .SetCellTextHeight i, j, 4.5
+            .SetCellAlignment i, j, acMiddleCenter
+            .SetCellType i, j, acTextCell
+            If Ceiling.Acoustic.Value = True Then
+                .SetText i, 19, "\U+25CF"
+            End If
+            If Ceiling.Vinyl.Value = True Then
+                .SetText i, 20, "\U+25CF"
+            End If
+            If Ceiling.Exist_Drywall.Value = True Then
+                .SetText i, 21, "\U+25CF"
+            End If
+            If Ceiling.Existing.Value = True Then
+                .SetText i, 22, "\U+25CF"
+            End If
+            If Ceiling.New_Drywall.Value = True Then
+                .SetText i, 23, "\U+25CF"
+            End If
+        Next
+    'Ceiling Height Cell
+        .SetCellTextHeight i, 24, 4.5
+        .SetCellAlignment i, 24, acMiddleCenter
+        .SetCellType i, 24, acTextCell
+        .SetText i, 24, "EXIST."
+        
+'=======================================================================================================
+    'Populates the notes
+    
+'=======================================================================================================
+    'Indents to Next Row
+        i = i + 1
+        
+    End If
+  
+'=======================================================================================================
+'105 Service Closet
+    Room.CheckBox1.Caption = "Service Closet"
+    Room.CheckBox1.Value = False
+    Room.CheckBox2.Visible = False
+    Room.CheckBox2.Value = False
+    Room.show
+
+    'Space Designation and Room Name Cells
+    If Room.CheckBox1.Value = True Then
+        For j = 0 To 1
+            .SetCellTextHeight i, j, 4.5
+            .SetCellAlignment i, j, acMiddleCenter
+            .SetCellType i, j, acTextCell
+            .SetText i, 0, "105"
+            .SetText i, 1, "SERVICE CLOSET"
+        Next
+        
+'=======================================================================================================
+    'Floor Finish Cells
+        Floor.Porcelain.Value = False
+        Floor.Quarry.Value = False
+        Floor.Existing.Value = False
+        Floor.show
+        For j = 2 To 5
+            .SetCellTextHeight i, j, 4.5
+            .SetCellAlignment i, j, acMiddleCenter
+            .SetCellType i, j, acTextCell
+            If Floor.Porcelain.Value = True Then
+                .SetText i, 2, "\U+25CF"
+            ElseIf Floor.Quarry.Value = True Then
+                .SetText i, 3, "\U+25CF"
+            ElseIf Floor.Existing.Value = True Then
+                .SetText i, 5, "\U+25CF"
+            End If
+        Next
+            
+'=======================================================================================================
+    'Base Finish Cells
+        Base.Coved.Value = False
+        Base.Porcelain.Value = False
+        Base.Existing.Value = False
+        Base.show
+        For j = 6 To 9
+            .SetCellTextHeight i, j, 4.5
+            .SetCellAlignment i, j, acMiddleCenter
+            .SetCellType i, j, acTextCell
+            If Base.Coved.Value = True Then
+                .SetText i, 7, "\U+25CF"
+            ElseIf Base.Porcelain.Value = True Then
+                .SetText i, 8, "\U+25CF"
+            ElseIf Base.Existing.Value = True Then
+                .SetText i, 9, "\U+25CF"
+            End If
+        Next
+        
+'=======================================================================================================
+    'Wall Finish Cells
+        Walls.Vinyl.Value = False
+        Walls.Porcelain.Value = False
+        Walls.Epoxy.Value = False
+        Walls.Laminate.Value = False
+        Walls.Paint.Value = False
+        Walls.FRP.Value = False
+        Walls.Wallpaper.Value = False
+        Walls.Existing_Tile.Value = False
+        Walls.Existing.Value = False
+        Walls.show
+        For j = 10 To 18
+            .SetCellTextHeight i, j, 4.5
+            .SetCellAlignment i, j, acMiddleCenter
+            .SetCellType i, j, acTextCell
+            If Walls.Vinyl.Value = True Then
+                .SetText i, 10, "\U+25CF"
+            End If
+            If Walls.Porcelain.Value = True Then
+                .SetText i, 11, "\U+25CF"
+            End If
+            If Walls.Epoxy.Value = True Then
+                .SetText i, 12, "\U+25CF"
+            End If
+            If Walls.Laminate.Value = True Then
+                .SetText i, 13, "\U+25CF"
+            End If
+            If Walls.Paint.Value = True Then
+                .SetText i, 14, "\U+25CF"
+            End If
+            If Walls.FRP.Value = True Then
+                .SetText i, 15, "\U+25CF"
+            End If
+            If Walls.Wallpaper.Value = True Then
+                .SetText i, 16, "\U+25CF"
+            End If
+            If Walls.Existing_Tile.Value = True Then
+                .SetText i, 17, "\U+25CF"
+            End If
+            If Walls.Existing.Value = True Then
+                .SetText i, 18, "\U+25CF"
+            End If
+        Next
+    
+'=======================================================================================================
+    'Ceiling Finish Cells
+        Ceiling.Acoustic.Value = False
+        Ceiling.Vinyl.Value = False
+        Ceiling.Exist_Drywall.Value = False
+        Ceiling.Existing.Value = False
+        Ceiling.New_Drywall.Value = False
+        Ceiling.show
+        For j = 19 To 23
+            .SetCellTextHeight i, j, 4.5
+            .SetCellAlignment i, j, acMiddleCenter
+            .SetCellType i, j, acTextCell
+            If Ceiling.Acoustic.Value = True Then
+                .SetText i, 19, "\U+25CF"
+            End If
+            If Ceiling.Vinyl.Value = True Then
+                .SetText i, 20, "\U+25CF"
+            End If
+            If Ceiling.Exist_Drywall.Value = True Then
+                .SetText i, 21, "\U+25CF"
+            End If
+            If Ceiling.Existing.Value = True Then
+                .SetText i, 22, "\U+25CF"
+            End If
+            If Ceiling.New_Drywall.Value = True Then
+                .SetText i, 23, "\U+25CF"
+            End If
+        Next
+    'Ceiling Height Cell
+        .SetCellTextHeight i, 24, 4.5
+        .SetCellAlignment i, 24, acMiddleCenter
+        .SetCellType i, 24, acTextCell
+        .SetText i, 24, "EXIST."
+        
+'=======================================================================================================
+    'Populates the notes
+    
+'=======================================================================================================
+    'Indents to Next Row
+        i = i + 1
+        
+    End If
+    
+'=======================================================================================================
+'106 Drive Thru
+    Room.CheckBox1.Value = False
+    Room.CheckBox2.Value = False
+    Room.CheckBox1.Visible = True
+    Room.CheckBox2.Visible = True
+    Room.CheckBox1.Caption = "Drive Thru"
+    Room.CheckBox2.Caption = "Drive Thru (2)"
+    Room.show
+    
+    'Space Designation and Room Name Cells
+    If Room.CheckBox1.Value = True And Room.CheckBox2.Value = False Then
+        For j = 0 To 1
+            .SetCellTextHeight i, j, 4.5
+            .SetCellAlignment i, j, acMiddleCenter
+            .SetCellType i, j, acTextCell
+            .SetText i, 0, "106"
+            .SetText i, 1, "DRIVE THRU"
+        Next
+        
+'=======================================================================================================
+    'Floor Finish Cells
+        Floor.Porcelain.Value = False
+        Floor.Quarry.Value = False
+        Floor.Existing.Value = False
+        Floor.show
+        For j = 2 To 5
+            .SetCellTextHeight i, j, 4.5
+            .SetCellAlignment i, j, acMiddleCenter
+            .SetCellType i, j, acTextCell
+            If Floor.Porcelain.Value = True Then
+                .SetText i, 2, "\U+25CF"
+            ElseIf Floor.Quarry.Value = True Then
+                .SetText i, 3, "\U+25CF"
+            ElseIf Floor.Existing.Value = True Then
+                .SetText i, 5, "\U+25CF"
+            End If
+        Next
+        
+'=======================================================================================================
+    'Base Finish Cells
+        Base.Coved.Value = False
+        Base.Porcelain.Value = False
+        Base.Existing.Value = False
+        Base.show
+        For j = 6 To 9
+            .SetCellTextHeight i, j, 4.5
+            .SetCellAlignment i, j, acMiddleCenter
+            .SetCellType i, j, acTextCell
+            If Base.Coved.Value = True Then
+                .SetText i, 7, "\U+25CF"
+            ElseIf Base.Porcelain.Value = True Then
+                .SetText i, 8, "\U+25CF"
+            ElseIf Base.Existing.Value = True Then
+                .SetText i, 9, "\U+25CF"
+            End If
+        Next
+        
+'=======================================================================================================
+    'Wall Finish Cells
+        Walls.Vinyl.Value = False
+        Walls.Porcelain.Value = False
+        Walls.Epoxy.Value = False
+        Walls.Laminate.Value = False
+        Walls.Paint.Value = False
+        Walls.FRP.Value = False
+        Walls.Wallpaper.Value = False
+        Walls.Existing_Tile.Value = False
+        Walls.Existing.Value = False
+        Walls.show
+        For j = 10 To 18
+            .SetCellTextHeight i, j, 4.5
+            .SetCellAlignment i, j, acMiddleCenter
+            .SetCellType i, j, acTextCell
+            If Walls.Vinyl.Value = True Then
+                .SetText i, 10, "\U+25CF"
+            End If
+            If Walls.Porcelain.Value = True Then
+                .SetText i, 11, "\U+25CF"
+            End If
+            If Walls.Epoxy.Value = True Then
+                .SetText i, 12, "\U+25CF"
+            End If
+            If Walls.Laminate.Value = True Then
+                .SetText i, 13, "\U+25CF"
+            End If
+            If Walls.Paint.Value = True Then
+                .SetText i, 14, "\U+25CF"
+            End If
+            If Walls.FRP.Value = True Then
+                .SetText i, 15, "\U+25CF"
+            End If
+            If Walls.Wallpaper.Value = True Then
+                .SetText i, 16, "\U+25CF"
+            End If
+            If Walls.Existing_Tile.Value = True Then
+                .SetText i, 17, "\U+25CF"
+            End If
+            If Walls.Existing.Value = True Then
+                .SetText i, 18, "\U+25CF"
+            End If
+            
+        Next
+        
+'=======================================================================================================
+    'Ceiling Finish Cells
+        Ceiling.Acoustic.Value = False
+        Ceiling.Vinyl.Value = False
+        Ceiling.Exist_Drywall.Value = False
+        Ceiling.Existing.Value = False
+        Ceiling.New_Drywall.Value = False
+        Ceiling.show
+        For j = 19 To 23
+            .SetCellTextHeight i, j, 4.5
+            .SetCellAlignment i, j, acMiddleCenter
+            .SetCellType i, j, acTextCell
+            If Ceiling.Acoustic.Value = True Then
+                .SetText i, 19, "\U+25CF"
+            End If
+            If Ceiling.Vinyl.Value = True Then
+                .SetText i, 20, "\U+25CF"
+            End If
+            If Ceiling.Exist_Drywall.Value = True Then
+                .SetText i, 21, "\U+25CF"
+            End If
+            If Ceiling.Existing.Value = True Then
+                .SetText i, 22, "\U+25CF"
+            End If
+            If Ceiling.New_Drywall.Value = True Then
+                .SetText i, 23, "\U+25CF"
+            End If
+        Next
+    'Ceiling Height Cell
+        .SetCellTextHeight i, 24, 4.5
+        .SetCellAlignment i, 24, acMiddleCenter
+        .SetCellType i, 24, acTextCell
+        .SetText i, 24, "EXIST."
+        
+'=======================================================================================================
+    'Populates the notes
+        If Room.CheckBox1.Value = True Then
+            .SetText i, 25, "1"
+        End If
+        If Ceiling.Acoustic.Value = True Then
+            
+        End If
+        
+        i = i + 1
+        
+'=======================================================================================================
+'For A and B room set
+    ElseIf Room.CheckBox1.Value = True And Room.CheckBox2.Value = True Then
+        Floor.Porcelain.Value = False
+        Floor.Quarry.Value = False
+        Floor.Existing.Value = False
+        Floor.show
+        Base.Coved.Value = False
+        Base.Porcelain.Value = False
+        Base.Existing.Value = False
+        Base.show
+        Walls.Vinyl.Value = False
+        Walls.Porcelain.Value = False
+        Walls.Epoxy.Value = False
+        Walls.Laminate.Value = False
+        Walls.Paint.Value = False
+        Walls.FRP.Value = False
+        Walls.Wallpaper.Value = False
+        Walls.Existing_Tile.Value = False
+        Walls.Existing.Value = False
+        Walls.show
+        Ceiling.Acoustic.Value = False
+        Ceiling.Vinyl.Value = False
+        Ceiling.Exist_Drywall.Value = False
+        Ceiling.Existing.Value = False
+        Ceiling.New_Drywall.Value = False
+        Ceiling.show
+        For i = i To i + 1
+            l = l + 1
+            For j = 0 To .Columns - 1
+            .SetCellTextHeight i, j, 4.5
+            .SetCellAlignment i, j, acMiddleCenter
+            .SetCellType i, j, acTextCell
+            .SetText i, 0, "106" & Chr$(64 + l)
+            .SetText i, 1, "DRIVE THRU"
+        'Floor Finish Cells
+            If Floor.Porcelain.Value = True Then
+                .SetText i, 2, "\U+25CF"
+            ElseIf Floor.Quarry.Value = True Then
+                .SetText i, 3, "\U+25CF"
+            ElseIf Floor.Existing.Value = True Then
+                .SetText i, 5, "\U+25CF"
+            End If
+        'Base Finish Cells
+            If Base.Coved.Value = True Then
+                .SetText i, 7, "\U+25CF"
+            ElseIf Base.Porcelain.Value = True Then
+                .SetText i, 8, "\U+25CF"
+            ElseIf Base.Existing.Value = True Then
+                .SetText i, 9, "\U+25CF"
+            End If
+        'Wall Finish Cells
+            If Walls.Vinyl.Value = True Then
+                .SetText i, 10, "\U+25CF"
+            End If
+            If Walls.Porcelain.Value = True Then
+                .SetText i, 11, "\U+25CF"
+            End If
+            If Walls.Epoxy.Value = True Then
+                .SetText i, 12, "\U+25CF"
+            End If
+            If Walls.Laminate.Value = True Then
+                .SetText i, 13, "\U+25CF"
+            End If
+            If Walls.Paint.Value = True Then
+                .SetText i, 14, "\U+25CF"
+            End If
+            If Walls.FRP.Value = True Then
+                .SetText i, 15, "\U+25CF"
+            End If
+            If Walls.Wallpaper.Value = True Then
+                .SetText i, 16, "\U+25CF"
+            End If
+            If Walls.Existing_Tile.Value = True Then
+                .SetText i, 17, "\U+25CF"
+            End If
+            If Walls.Existing.Value = True Then
+                .SetText i, 18, "\U+25CF"
+            End If
+        'Ceiling Finish Cells
+            If Ceiling.Acoustic.Value = True Then
+                .SetText i, 19, "\U+25CF"
+            End If
+            If Ceiling.Vinyl.Value = True Then
+                .SetText i, 20, "\U+25CF"
+            End If
+            If Ceiling.Exist_Drywall.Value = True Then
+                .SetText i, 21, "\U+25CF"
+            End If
+            If Ceiling.Existing.Value = True Then
+                .SetText i, 22, "\U+25CF"
+            End If
+            If Ceiling.New_Drywall.Value = True Then
+                .SetText i, 23, "\U+25CF"
+            End If
+        'Ceiling Height Cell
+            .SetText i, 24, "EXIST."
+            Next
+        Next
+    l = 0
+    End If
+    
+'=======================================================================================================
+'107 Preperation Area
+    Room.CheckBox1.Caption = "Preperation Area"
+    Room.CheckBox1.Value = False
+    Room.CheckBox2.Visible = False
+    Room.CheckBox2.Value = False
+    Room.show
+
+    'Space Designation and Room Name Cells
+    If Room.CheckBox1.Value = True Then
+        For j = 0 To 1
+            .SetCellTextHeight i, j, 4.5
+            .SetCellAlignment i, j, acMiddleCenter
+            .SetCellType i, j, acTextCell
+            .SetText i, 0, "107"
+            .SetText i, 1, "PREPERATION AREA"
+        Next
+        
+'=======================================================================================================
+    'Floor Finish Cells
+        Floor.Porcelain.Value = False
+        Floor.Quarry.Value = False
+        Floor.Existing.Value = False
+        Floor.show
+        For j = 2 To 5
+            .SetCellTextHeight i, j, 4.5
+            .SetCellAlignment i, j, acMiddleCenter
+            .SetCellType i, j, acTextCell
+            If Floor.Porcelain.Value = True Then
+                .SetText i, 2, "\U+25CF"
+            ElseIf Floor.Quarry.Value = True Then
+                .SetText i, 3, "\U+25CF"
+            ElseIf Floor.Existing.Value = True Then
+                .SetText i, 5, "\U+25CF"
+            End If
+        Next
+            
+'=======================================================================================================
+    'Base Finish Cells
+        Base.Coved.Value = False
+        Base.Porcelain.Value = False
+        Base.Existing.Value = False
+        Base.show
+        For j = 6 To 9
+            .SetCellTextHeight i, j, 4.5
+            .SetCellAlignment i, j, acMiddleCenter
+            .SetCellType i, j, acTextCell
+            If Base.Coved.Value = True Then
+                .SetText i, 7, "\U+25CF"
+            ElseIf Base.Porcelain.Value = True Then
+                .SetText i, 8, "\U+25CF"
+            ElseIf Base.Existing.Value = True Then
+                .SetText i, 9, "\U+25CF"
+            End If
+        Next
+        
+'=======================================================================================================
+    'Wall Finish Cells
+        Walls.Vinyl.Value = False
+        Walls.Porcelain.Value = False
+        Walls.Epoxy.Value = False
+        Walls.Laminate.Value = False
+        Walls.Paint.Value = False
+        Walls.FRP.Value = False
+        Walls.Wallpaper.Value = False
+        Walls.Existing_Tile.Value = False
+        Walls.Existing.Value = False
+        Walls.show
+        For j = 10 To 18
+            .SetCellTextHeight i, j, 4.5
+            .SetCellAlignment i, j, acMiddleCenter
+            .SetCellType i, j, acTextCell
+            If Walls.Vinyl.Value = True Then
+                .SetText i, 10, "\U+25CF"
+            End If
+            If Walls.Porcelain.Value = True Then
+                .SetText i, 11, "\U+25CF"
+            End If
+            If Walls.Epoxy.Value = True Then
+                .SetText i, 12, "\U+25CF"
+            End If
+            If Walls.Laminate.Value = True Then
+                .SetText i, 13, "\U+25CF"
+            End If
+            If Walls.Paint.Value = True Then
+                .SetText i, 14, "\U+25CF"
+            End If
+            If Walls.FRP.Value = True Then
+                .SetText i, 15, "\U+25CF"
+            End If
+            If Walls.Wallpaper.Value = True Then
+                .SetText i, 16, "\U+25CF"
+            End If
+            If Walls.Existing_Tile.Value = True Then
+                .SetText i, 17, "\U+25CF"
+            End If
+            If Walls.Existing.Value = True Then
+                .SetText i, 18, "\U+25CF"
+            End If
+        Next
+    
+'=======================================================================================================
+    'Ceiling Finish Cells
+        Ceiling.Acoustic.Value = False
+        Ceiling.Vinyl.Value = False
+        Ceiling.Exist_Drywall.Value = False
+        Ceiling.Existing.Value = False
+        Ceiling.New_Drywall.Value = False
+        Ceiling.show
+        For j = 19 To 23
+            .SetCellTextHeight i, j, 4.5
+            .SetCellAlignment i, j, acMiddleCenter
+            .SetCellType i, j, acTextCell
+            If Ceiling.Acoustic.Value = True Then
+                .SetText i, 19, "\U+25CF"
+            End If
+            If Ceiling.Vinyl.Value = True Then
+                .SetText i, 20, "\U+25CF"
+            End If
+            If Ceiling.Exist_Drywall.Value = True Then
+                .SetText i, 21, "\U+25CF"
+            End If
+            If Ceiling.Existing.Value = True Then
+                .SetText i, 22, "\U+25CF"
+            End If
+            If Ceiling.New_Drywall.Value = True Then
+                .SetText i, 23, "\U+25CF"
+            End If
+        Next
+    'Ceiling Height Cell
+        .SetCellTextHeight i, 24, 4.5
+        .SetCellAlignment i, 24, acMiddleCenter
+        .SetCellType i, 24, acTextCell
+        .SetText i, 24, "EXIST."
+        
+'=======================================================================================================
+    'Populates the notes
+    
+'=======================================================================================================
+    'Indents to Next Row
+        i = i + 1
+        
+    End If
+  
+'=======================================================================================================
+'109 Office
+    Room.CheckBox1.Caption = "Office"
+    Room.CheckBox1.Value = False
+    Room.CheckBox2.Visible = False
+    Room.CheckBox2.Value = False
+    Room.show
+
+    'Space Designation and Room Name Cells
+    If Room.CheckBox1.Value = True Then
+        For j = 0 To 1
+            .SetCellTextHeight i, j, 4.5
+            .SetCellAlignment i, j, acMiddleCenter
+            .SetCellType i, j, acTextCell
+            .SetText i, 0, "109"
+            .SetText i, 1, "Office"
+        Next
+        
+'=======================================================================================================
+    'Floor Finish Cells
+        Floor.Porcelain.Value = False
+        Floor.Quarry.Value = False
+        Floor.Existing.Value = False
+        Floor.show
+        For j = 2 To 5
+            .SetCellTextHeight i, j, 4.5
+            .SetCellAlignment i, j, acMiddleCenter
+            .SetCellType i, j, acTextCell
+            If Floor.Porcelain.Value = True Then
+                .SetText i, 2, "\U+25CF"
+            ElseIf Floor.Quarry.Value = True Then
+                .SetText i, 3, "\U+25CF"
+            ElseIf Floor.Existing.Value = True Then
+                .SetText i, 5, "\U+25CF"
+            End If
+        Next
+            
+'=======================================================================================================
+    'Base Finish Cells
+        Base.Coved.Value = False
+        Base.Porcelain.Value = False
+        Base.Existing.Value = False
+        Base.show
+        For j = 6 To 9
+            .SetCellTextHeight i, j, 4.5
+            .SetCellAlignment i, j, acMiddleCenter
+            .SetCellType i, j, acTextCell
+            If Base.Coved.Value = True Then
+                .SetText i, 7, "\U+25CF"
+            ElseIf Base.Porcelain.Value = True Then
+                .SetText i, 8, "\U+25CF"
+            ElseIf Base.Existing.Value = True Then
+                .SetText i, 9, "\U+25CF"
+            End If
+        Next
+        
+'=======================================================================================================
+    'Wall Finish Cells
+        Walls.Vinyl.Value = False
+        Walls.Porcelain.Value = False
+        Walls.Epoxy.Value = False
+        Walls.Laminate.Value = False
+        Walls.Paint.Value = False
+        Walls.FRP.Value = False
+        Walls.Wallpaper.Value = False
+        Walls.Existing_Tile.Value = False
+        Walls.Existing.Value = False
+        Walls.show
+        For j = 10 To 18
+            .SetCellTextHeight i, j, 4.5
+            .SetCellAlignment i, j, acMiddleCenter
+            .SetCellType i, j, acTextCell
+            If Walls.Vinyl.Value = True Then
+                .SetText i, 10, "\U+25CF"
+            End If
+            If Walls.Porcelain.Value = True Then
+                .SetText i, 11, "\U+25CF"
+            End If
+            If Walls.Epoxy.Value = True Then
+                .SetText i, 12, "\U+25CF"
+            End If
+            If Walls.Laminate.Value = True Then
+                .SetText i, 13, "\U+25CF"
+            End If
+            If Walls.Paint.Value = True Then
+                .SetText i, 14, "\U+25CF"
+            End If
+            If Walls.FRP.Value = True Then
+                .SetText i, 15, "\U+25CF"
+            End If
+            If Walls.Wallpaper.Value = True Then
+                .SetText i, 16, "\U+25CF"
+            End If
+            If Walls.Existing_Tile.Value = True Then
+                .SetText i, 17, "\U+25CF"
+            End If
+            If Walls.Existing.Value = True Then
+                .SetText i, 18, "\U+25CF"
+            End If
+        Next
+    
+'=======================================================================================================
+    'Ceiling Finish Cells
+        Ceiling.Acoustic.Value = False
+        Ceiling.Vinyl.Value = False
+        Ceiling.Exist_Drywall.Value = False
+        Ceiling.Existing.Value = False
+        Ceiling.New_Drywall.Value = False
+        Ceiling.show
+        For j = 19 To 23
+            .SetCellTextHeight i, j, 4.5
+            .SetCellAlignment i, j, acMiddleCenter
+            .SetCellType i, j, acTextCell
+            If Ceiling.Acoustic.Value = True Then
+                .SetText i, 19, "\U+25CF"
+            End If
+            If Ceiling.Vinyl.Value = True Then
+                .SetText i, 20, "\U+25CF"
+            End If
+            If Ceiling.Exist_Drywall.Value = True Then
+                .SetText i, 21, "\U+25CF"
+            End If
+            If Ceiling.Existing.Value = True Then
+                .SetText i, 22, "\U+25CF"
+            End If
+            If Ceiling.New_Drywall.Value = True Then
+                .SetText i, 23, "\U+25CF"
+            End If
+        Next
+    'Ceiling Height Cell
+        .SetCellTextHeight i, 24, 4.5
+        .SetCellAlignment i, 24, acMiddleCenter
+        .SetCellType i, 24, acTextCell
+        .SetText i, 24, "EXIST."
+        
+'=======================================================================================================
+    'Populates the notes
+    
+'=======================================================================================================
+    'Indents to Next Row
+        i = i + 1
+        
+    End If
+  
+'=======================================================================================================
+'110 Break Area
+    Room.CheckBox1.Caption = "Break Area"
+    Room.CheckBox1.Value = False
+    Room.CheckBox2.Visible = False
+    Room.CheckBox2.Value = False
+    Room.show
+
+    'Space Designation and Room Name Cells
+    If Room.CheckBox1.Value = True Then
+        For j = 0 To 1
+            .SetCellTextHeight i, j, 4.5
+            .SetCellAlignment i, j, acMiddleCenter
+            .SetCellType i, j, acTextCell
+            .SetText i, 0, "110"
+            .SetText i, 1, "BREAK AREA"
+        Next
+        
+'=======================================================================================================
+    'Floor Finish Cells
+        Floor.Porcelain.Value = False
+        Floor.Quarry.Value = False
+        Floor.Existing.Value = False
+        Floor.show
+        For j = 2 To 5
+            .SetCellTextHeight i, j, 4.5
+            .SetCellAlignment i, j, acMiddleCenter
+            .SetCellType i, j, acTextCell
+            If Floor.Porcelain.Value = True Then
+                .SetText i, 2, "\U+25CF"
+            ElseIf Floor.Quarry.Value = True Then
+                .SetText i, 3, "\U+25CF"
+            ElseIf Floor.Existing.Value = True Then
+                .SetText i, 5, "\U+25CF"
+            End If
+        Next
+            
+'=======================================================================================================
+    'Base Finish Cells
+        Base.Coved.Value = False
+        Base.Porcelain.Value = False
+        Base.Existing.Value = False
+        Base.show
+        For j = 6 To 9
+            .SetCellTextHeight i, j, 4.5
+            .SetCellAlignment i, j, acMiddleCenter
+            .SetCellType i, j, acTextCell
+            If Base.Coved.Value = True Then
+                .SetText i, 7, "\U+25CF"
+            ElseIf Base.Porcelain.Value = True Then
+                .SetText i, 8, "\U+25CF"
+            ElseIf Base.Existing.Value = True Then
+                .SetText i, 9, "\U+25CF"
+            End If
+        Next
+        
+'=======================================================================================================
+    'Wall Finish Cells
+        Walls.Vinyl.Value = False
+        Walls.Porcelain.Value = False
+        Walls.Epoxy.Value = False
+        Walls.Laminate.Value = False
+        Walls.Paint.Value = False
+        Walls.FRP.Value = False
+        Walls.Wallpaper.Value = False
+        Walls.Existing_Tile.Value = False
+        Walls.Existing.Value = False
+        Walls.show
+        For j = 10 To 18
+            .SetCellTextHeight i, j, 4.5
+            .SetCellAlignment i, j, acMiddleCenter
+            .SetCellType i, j, acTextCell
+            If Walls.Vinyl.Value = True Then
+                .SetText i, 10, "\U+25CF"
+            End If
+            If Walls.Porcelain.Value = True Then
+                .SetText i, 11, "\U+25CF"
+            End If
+            If Walls.Epoxy.Value = True Then
+                .SetText i, 12, "\U+25CF"
+            End If
+            If Walls.Laminate.Value = True Then
+                .SetText i, 13, "\U+25CF"
+            End If
+            If Walls.Paint.Value = True Then
+                .SetText i, 14, "\U+25CF"
+            End If
+            If Walls.FRP.Value = True Then
+                .SetText i, 15, "\U+25CF"
+            End If
+            If Walls.Wallpaper.Value = True Then
+                .SetText i, 16, "\U+25CF"
+            End If
+            If Walls.Existing_Tile.Value = True Then
+                .SetText i, 17, "\U+25CF"
+            End If
+            If Walls.Existing.Value = True Then
+                .SetText i, 18, "\U+25CF"
+            End If
+        Next
+    
+'=======================================================================================================
+    'Ceiling Finish Cells
+        Ceiling.Acoustic.Value = False
+        Ceiling.Vinyl.Value = False
+        Ceiling.Exist_Drywall.Value = False
+        Ceiling.Existing.Value = False
+        Ceiling.New_Drywall.Value = False
+        Ceiling.show
+        For j = 19 To 23
+            .SetCellTextHeight i, j, 4.5
+            .SetCellAlignment i, j, acMiddleCenter
+            .SetCellType i, j, acTextCell
+            If Ceiling.Acoustic.Value = True Then
+                .SetText i, 19, "\U+25CF"
+            End If
+            If Ceiling.Vinyl.Value = True Then
+                .SetText i, 20, "\U+25CF"
+            End If
+            If Ceiling.Exist_Drywall.Value = True Then
+                .SetText i, 21, "\U+25CF"
+            End If
+            If Ceiling.Existing.Value = True Then
+                .SetText i, 22, "\U+25CF"
+            End If
+            If Ceiling.New_Drywall.Value = True Then
+                .SetText i, 23, "\U+25CF"
+            End If
+        Next
+    'Ceiling Height Cell
+        .SetCellTextHeight i, 24, 4.5
+        .SetCellAlignment i, 24, acMiddleCenter
+        .SetCellType i, 24, acTextCell
+        .SetText i, 24, "EXIST."
+        
+'=======================================================================================================
+    'Populates the notes
+    
+'=======================================================================================================
+    'Indents to Next Row
+        i = i + 1
+        
+    End If
+
+'=======================================================================================================
+'111 Dishwashing Area
+    Room.CheckBox1.Caption = "Dishwashing Area"
+    Room.CheckBox1.Value = False
+    Room.CheckBox2.Visible = False
+    Room.CheckBox2.Value = False
+    Room.show
+
+    'Space Designation and Room Name Cells
+    If Room.CheckBox1.Value = True Then
+        For j = 0 To 1
+            .SetCellTextHeight i, j, 4.5
+            .SetCellAlignment i, j, acMiddleCenter
+            .SetCellType i, j, acTextCell
+            .SetText i, 0, "111"
+            .SetText i, 1, "DISHWASHING AREA"
+        Next
+        
+'=======================================================================================================
+    'Floor Finish Cells
+        Floor.Porcelain.Value = False
+        Floor.Quarry.Value = False
+        Floor.Existing.Value = False
+        Floor.show
+        For j = 2 To 5
+            .SetCellTextHeight i, j, 4.5
+            .SetCellAlignment i, j, acMiddleCenter
+            .SetCellType i, j, acTextCell
+            If Floor.Porcelain.Value = True Then
+                .SetText i, 2, "\U+25CF"
+            ElseIf Floor.Quarry.Value = True Then
+                .SetText i, 3, "\U+25CF"
+            ElseIf Floor.Existing.Value = True Then
+                .SetText i, 5, "\U+25CF"
+            End If
+        Next
+            
+'=======================================================================================================
+    'Base Finish Cells
+        Base.Coved.Value = False
+        Base.Porcelain.Value = False
+        Base.Existing.Value = False
+        Base.show
+        For j = 6 To 9
+            .SetCellTextHeight i, j, 4.5
+            .SetCellAlignment i, j, acMiddleCenter
+            .SetCellType i, j, acTextCell
+            If Base.Coved.Value = True Then
+                .SetText i, 7, "\U+25CF"
+            ElseIf Base.Porcelain.Value = True Then
+                .SetText i, 8, "\U+25CF"
+            ElseIf Base.Existing.Value = True Then
+                .SetText i, 9, "\U+25CF"
+            End If
+        Next
+        
+'=======================================================================================================
+    'Wall Finish Cells
+        Walls.Vinyl.Value = False
+        Walls.Porcelain.Value = False
+        Walls.Epoxy.Value = False
+        Walls.Laminate.Value = False
+        Walls.Paint.Value = False
+        Walls.FRP.Value = False
+        Walls.Wallpaper.Value = False
+        Walls.Existing_Tile.Value = False
+        Walls.Existing.Value = False
+        Walls.show
+        For j = 10 To 18
+            .SetCellTextHeight i, j, 4.5
+            .SetCellAlignment i, j, acMiddleCenter
+            .SetCellType i, j, acTextCell
+            If Walls.Vinyl.Value = True Then
+                .SetText i, 10, "\U+25CF"
+            End If
+            If Walls.Porcelain.Value = True Then
+                .SetText i, 11, "\U+25CF"
+            End If
+            If Walls.Epoxy.Value = True Then
+                .SetText i, 12, "\U+25CF"
+            End If
+            If Walls.Laminate.Value = True Then
+                .SetText i, 13, "\U+25CF"
+            End If
+            If Walls.Paint.Value = True Then
+                .SetText i, 14, "\U+25CF"
+            End If
+            If Walls.FRP.Value = True Then
+                .SetText i, 15, "\U+25CF"
+            End If
+            If Walls.Wallpaper.Value = True Then
+                .SetText i, 16, "\U+25CF"
+            End If
+            If Walls.Existing_Tile.Value = True Then
+                .SetText i, 17, "\U+25CF"
+            End If
+            If Walls.Existing.Value = True Then
+                .SetText i, 18, "\U+25CF"
+            End If
+        Next
+        
+        For j = 19 To 24
+        Next
+        
+    
+'=======================================================================================================
+    'Ceiling Finish Cells
+        Ceiling.Acoustic.Value = False
+        Ceiling.Vinyl.Value = False
+        Ceiling.Exist_Drywall.Value = False
+        Ceiling.Existing.Value = False
+        Ceiling.New_Drywall.Value = False
+        Ceiling.show
+        For j = 19 To 23
+            .SetCellTextHeight i, j, 4.5
+            .SetCellAlignment i, j, acMiddleCenter
+            .SetCellType i, j, acTextCell
+            If Ceiling.Acoustic.Value = True Then
+                .SetText i, 19, "\U+25CF"
+            End If
+            If Ceiling.Vinyl.Value = True Then
+                .SetText i, 20, "\U+25CF"
+            End If
+            If Ceiling.Exist_Drywall.Value = True Then
+                .SetText i, 21, "\U+25CF"
+            End If
+            If Ceiling.Existing.Value = True Then
+                .SetText i, 22, "\U+25CF"
+            End If
+            If Ceiling.New_Drywall.Value = True Then
+                .SetText i, 23, "\U+25CF"
+            End If
+        Next
+    'Ceiling Height Cell
+        .SetCellTextHeight i, 24, 4.5
+        .SetCellAlignment i, 24, acMiddleCenter
+        .SetCellType i, 24, acTextCell
+        .SetText i, 24, "EXIST."
+        
+'=======================================================================================================
+    'Populates the notes
+    
+'=======================================================================================================
+    'Indents to Next Row
+        i = i + 1
+        
+    End If
+  
+'=======================================================================================================
+'112 Walk-In Cooler
+    Room.CheckBox1.Value = False
+    Room.CheckBox2.Value = False
+    Room.CheckBox1.Visible = True
+    Room.CheckBox2.Visible = True
+    Room.CheckBox1.Caption = "Walk-in Cooler"
+    Room.CheckBox2.Caption = "Walk-in Cooler (2)"
+    Room.show
+    
+    'Space Designation and Room Name Cells
+    If Room.CheckBox1.Value = True And Room.CheckBox2.Value = False Then
+        For j = 0 To 1
+            .SetCellTextHeight i, j, 4.5
+            .SetCellAlignment i, j, acMiddleCenter
+            .SetCellType i, j, acTextCell
+            .SetText i, 0, "112"
+            .SetText i, 1, "WALK-IN COOLER"
+        Next
+        
+'=======================================================================================================
+    'Floor Finish Cells
+        Floor.Porcelain.Value = False
+        Floor.Quarry.Value = False
+        Floor.Existing.Value = False
+        Floor.show
+        For j = 2 To 5
+            .SetCellTextHeight i, j, 4.5
+            .SetCellAlignment i, j, acMiddleCenter
+            .SetCellType i, j, acTextCell
+            If Floor.Porcelain.Value = True Then
+                .SetText i, 2, "\U+25CF"
+            ElseIf Floor.Quarry.Value = True Then
+                .SetText i, 3, "\U+25CF"
+            ElseIf Floor.Existing.Value = True Then
+                .SetText i, 5, "\U+25CF"
+            End If
+        Next
+        
+'=======================================================================================================
+    'Base Finish Cells
+        Base.Coved.Value = False
+        Base.Porcelain.Value = False
+        Base.Existing.Value = False
+        Base.show
+        For j = 6 To 9
+            .SetCellTextHeight i, j, 4.5
+            .SetCellAlignment i, j, acMiddleCenter
+            .SetCellType i, j, acTextCell
+            If Base.Coved.Value = True Then
+                .SetText i, 7, "\U+25CF"
+            ElseIf Base.Porcelain.Value = True Then
+                .SetText i, 8, "\U+25CF"
+            ElseIf Base.Existing.Value = True Then
+                .SetText i, 9, "\U+25CF"
+            End If
+        Next
+        
+'=======================================================================================================
+    'Wall Finish Cells
+        Walls.Vinyl.Value = False
+        Walls.Porcelain.Value = False
+        Walls.Epoxy.Value = False
+        Walls.Laminate.Value = False
+        Walls.Paint.Value = False
+        Walls.FRP.Value = False
+        Walls.Wallpaper.Value = False
+        Walls.Existing_Tile.Value = False
+        Walls.Existing.Value = False
+        Walls.show
+        For j = 10 To 18
+            .SetCellTextHeight i, j, 4.5
+            .SetCellAlignment i, j, acMiddleCenter
+            .SetCellType i, j, acTextCell
+            If Walls.Vinyl.Value = True Then
+                .SetText i, 10, "\U+25CF"
+            End If
+            If Walls.Porcelain.Value = True Then
+                .SetText i, 11, "\U+25CF"
+            End If
+            If Walls.Epoxy.Value = True Then
+                .SetText i, 12, "\U+25CF"
+            End If
+            If Walls.Laminate.Value = True Then
+                .SetText i, 13, "\U+25CF"
+            End If
+            If Walls.Paint.Value = True Then
+                .SetText i, 14, "\U+25CF"
+            End If
+            If Walls.FRP.Value = True Then
+                .SetText i, 15, "\U+25CF"
+            End If
+            If Walls.Wallpaper.Value = True Then
+                .SetText i, 16, "\U+25CF"
+            End If
+            If Walls.Existing_Tile.Value = True Then
+                .SetText i, 17, "\U+25CF"
+            End If
+            If Walls.Existing.Value = True Then
+                .SetText i, 18, "\U+25CF"
+            End If
+            
+        Next
+        
+'=======================================================================================================
+    'Ceiling Finish Cells
+        Ceiling.Acoustic.Value = False
+        Ceiling.Vinyl.Value = False
+        Ceiling.Exist_Drywall.Value = False
+        Ceiling.Existing.Value = False
+        Ceiling.New_Drywall.Value = False
+        Ceiling.show
+        For j = 19 To 23
+            .SetCellTextHeight i, j, 4.5
+            .SetCellAlignment i, j, acMiddleCenter
+            .SetCellType i, j, acTextCell
+            If Ceiling.Acoustic.Value = True Then
+                .SetText i, 19, "\U+25CF"
+            End If
+            If Ceiling.Vinyl.Value = True Then
+                .SetText i, 20, "\U+25CF"
+            End If
+            If Ceiling.Exist_Drywall.Value = True Then
+                .SetText i, 21, "\U+25CF"
+            End If
+            If Ceiling.Existing.Value = True Then
+                .SetText i, 22, "\U+25CF"
+            End If
+            If Ceiling.New_Drywall.Value = True Then
+                .SetText i, 23, "\U+25CF"
+            End If
+        Next
+        'Ceiling Height Cell
+        .SetCellTextHeight i, 24, 4.5
+        .SetCellAlignment i, 24, acMiddleCenter
+        .SetCellType i, 24, acTextCell
+        .SetText i, 24, "EXIST."
+        
+'=======================================================================================================
+    'Populates the notes
+        If Room.CheckBox1.Value = True Then
+            .SetText i, 25, "1"
+        End If
+        If Ceiling.Acoustic.Value = True Then
+            
+        End If
+        
+        i = i + 1
+        
+'=======================================================================================================
+'For A and B room set
+    ElseIf Room.CheckBox1.Value = True And Room.CheckBox2.Value = True Then
+        Floor.Porcelain.Value = False
+        Floor.Quarry.Value = False
+        Floor.Existing.Value = False
+        Floor.show
+        Base.Coved.Value = False
+        Base.Porcelain.Value = False
+        Base.Existing.Value = False
+        Base.show
+        Walls.Vinyl.Value = False
+        Walls.Porcelain.Value = False
+        Walls.Epoxy.Value = False
+        Walls.Laminate.Value = False
+        Walls.Paint.Value = False
+        Walls.FRP.Value = False
+        Walls.Wallpaper.Value = False
+        Walls.Existing_Tile.Value = False
+        Walls.Existing.Value = False
+        Walls.show
+        Ceiling.Acoustic.Value = False
+        Ceiling.Vinyl.Value = False
+        Ceiling.Exist_Drywall.Value = False
+        Ceiling.Existing.Value = False
+        Ceiling.New_Drywall.Value = False
+        Ceiling.show
+        For i = i To i + 1
+            l = l + 1
+            For j = 0 To .Columns - 1
+            .SetCellTextHeight i, j, 4.5
+            .SetCellAlignment i, j, acMiddleCenter
+            .SetCellType i, j, acTextCell
+            .SetText i, 0, "112" & Chr$(64 + l)
+            .SetText i, 1, "WALK-IN COOLER"
+        'Floor Finish Cells
+            If Floor.Porcelain.Value = True Then
+                .SetText i, 2, "\U+25CF"
+            ElseIf Floor.Quarry.Value = True Then
+                .SetText i, 3, "\U+25CF"
+            ElseIf Floor.Existing.Value = True Then
+                .SetText i, 5, "\U+25CF"
+            End If
+        'Base Finish Cells
+            If Base.Coved.Value = True Then
+                .SetText i, 7, "\U+25CF"
+            ElseIf Base.Porcelain.Value = True Then
+                .SetText i, 8, "\U+25CF"
+            ElseIf Base.Existing.Value = True Then
+                .SetText i, 9, "\U+25CF"
+            End If
+        'Wall Finish Cells
+            If Walls.Vinyl.Value = True Then
+                .SetText i, 10, "\U+25CF"
+            End If
+            If Walls.Porcelain.Value = True Then
+                .SetText i, 11, "\U+25CF"
+            End If
+            If Walls.Epoxy.Value = True Then
+                .SetText i, 12, "\U+25CF"
+            End If
+            If Walls.Laminate.Value = True Then
+                .SetText i, 13, "\U+25CF"
+            End If
+            If Walls.Paint.Value = True Then
+                .SetText i, 14, "\U+25CF"
+            End If
+            If Walls.FRP.Value = True Then
+                .SetText i, 15, "\U+25CF"
+            End If
+            If Walls.Wallpaper.Value = True Then
+                .SetText i, 16, "\U+25CF"
+            End If
+            If Walls.Existing_Tile.Value = True Then
+                .SetText i, 17, "\U+25CF"
+            End If
+            If Walls.Existing.Value = True Then
+                .SetText i, 18, "\U+25CF"
+            End If
+        'Ceiling Finish Cells
+            If Ceiling.Acoustic.Value = True Then
+                .SetText i, 19, "\U+25CF"
+            End If
+            If Ceiling.Vinyl.Value = True Then
+                .SetText i, 20, "\U+25CF"
+            End If
+            If Ceiling.Exist_Drywall.Value = True Then
+                .SetText i, 21, "\U+25CF"
+            End If
+            If Ceiling.Existing.Value = True Then
+                .SetText i, 22, "\U+25CF"
+            End If
+            If Ceiling.New_Drywall.Value = True Then
+                .SetText i, 23, "\U+25CF"
+            End If
+        'Ceiling Height Cell
+            .SetText i, 24, "EXIST."
+            Next
+        Next
+    l = 0
+    End If
+    
+'=======================================================================================================
+'113 Wallk-In Freezer
+    Room.CheckBox1.Value = False
+    Room.CheckBox2.Value = False
+    Room.CheckBox1.Visible = True
+    Room.CheckBox2.Visible = True
+    Room.CheckBox1.Caption = "Walk-in Freezer"
+    Room.CheckBox2.Caption = "Walk-in Freezer (2)"
+    Room.show
+    
+    'Space Designation and Room Name Cells
+    If Room.CheckBox1.Value = True And Room.CheckBox2.Value = False Then
+        For j = 0 To 1
+            .SetCellTextHeight i, j, 4.5
+            .SetCellAlignment i, j, acMiddleCenter
+            .SetCellType i, j, acTextCell
+            .SetText i, 0, "113"
+            .SetText i, 1, "WALK-IN FREEZER"
+        Next
+        
+'=======================================================================================================
+    'Floor Finish Cells
+        Floor.Porcelain.Value = False
+        Floor.Quarry.Value = False
+        Floor.Existing.Value = False
+        Floor.show
+        For j = 2 To 5
+            .SetCellTextHeight i, j, 4.5
+            .SetCellAlignment i, j, acMiddleCenter
+            .SetCellType i, j, acTextCell
+            If Floor.Porcelain.Value = True Then
+                .SetText i, 2, "\U+25CF"
+            ElseIf Floor.Quarry.Value = True Then
+                .SetText i, 3, "\U+25CF"
+            ElseIf Floor.Existing.Value = True Then
+                .SetText i, 5, "\U+25CF"
+            End If
+        Next
+        
+'=======================================================================================================
+    'Base Finish Cells
+        Base.Coved.Value = False
+        Base.Porcelain.Value = False
+        Base.Existing.Value = False
+        Base.show
+        For j = 6 To 9
+            .SetCellTextHeight i, j, 4.5
+            .SetCellAlignment i, j, acMiddleCenter
+            .SetCellType i, j, acTextCell
+            If Base.Coved.Value = True Then
+                .SetText i, 7, "\U+25CF"
+            ElseIf Base.Porcelain.Value = True Then
+                .SetText i, 8, "\U+25CF"
+            ElseIf Base.Existing.Value = True Then
+                .SetText i, 9, "\U+25CF"
+            End If
+        Next
+        
+'=======================================================================================================
+    'Wall Finish Cells
+        Walls.Vinyl.Value = False
+        Walls.Porcelain.Value = False
+        Walls.Epoxy.Value = False
+        Walls.Laminate.Value = False
+        Walls.Paint.Value = False
+        Walls.FRP.Value = False
+        Walls.Wallpaper.Value = False
+        Walls.Existing_Tile.Value = False
+        Walls.Existing.Value = False
+        Walls.show
+        For j = 10 To 18
+            .SetCellTextHeight i, j, 4.5
+            .SetCellAlignment i, j, acMiddleCenter
+            .SetCellType i, j, acTextCell
+            If Walls.Vinyl.Value = True Then
+                .SetText i, 10, "\U+25CF"
+            End If
+            If Walls.Porcelain.Value = True Then
+                .SetText i, 11, "\U+25CF"
+            End If
+            If Walls.Epoxy.Value = True Then
+                .SetText i, 12, "\U+25CF"
+            End If
+            If Walls.Laminate.Value = True Then
+                .SetText i, 13, "\U+25CF"
+            End If
+            If Walls.Paint.Value = True Then
+                .SetText i, 14, "\U+25CF"
+            End If
+            If Walls.FRP.Value = True Then
+                .SetText i, 15, "\U+25CF"
+            End If
+            If Walls.Wallpaper.Value = True Then
+                .SetText i, 16, "\U+25CF"
+            End If
+            If Walls.Existing_Tile.Value = True Then
+                .SetText i, 17, "\U+25CF"
+            End If
+            If Walls.Existing.Value = True Then
+                .SetText i, 18, "\U+25CF"
+            End If
+            
+        Next
+    'Ceiling Finish Cells
+        Ceiling.Acoustic.Value = False
+        Ceiling.Vinyl.Value = False
+        Ceiling.Exist_Drywall.Value = False
+        Ceiling.Existing.Value = False
+        Ceiling.New_Drywall.Value = False
+        Ceiling.show
+        For j = 19 To 23
+            .SetCellTextHeight i, j, 4.5
+            .SetCellAlignment i, j, acMiddleCenter
+            .SetCellType i, j, acTextCell
+            If Ceiling.Acoustic.Value = True Then
+                .SetText i, 19, "\U+25CF"
+            End If
+            If Ceiling.Vinyl.Value = True Then
+                .SetText i, 20, "\U+25CF"
+            End If
+            If Ceiling.Exist_Drywall.Value = True Then
+                .SetText i, 21, "\U+25CF"
+            End If
+            If Ceiling.Existing.Value = True Then
+                .SetText i, 22, "\U+25CF"
+            End If
+            If Ceiling.New_Drywall.Value = True Then
+                .SetText i, 23, "\U+25CF"
+            End If
+        Next
+    'Ceiling Height Cell
+        .SetCellTextHeight i, 24, 4.5
+        .SetCellAlignment i, 24, acMiddleCenter
+        .SetCellType i, 24, acTextCell
+        .SetText i, 24, "EXIST."
+        
+'=======================================================================================================
+    'Populates the notes
+        If Room.CheckBox1.Value = True Then
+            .SetText i, 25, "1"
+        End If
+        If Ceiling.Acoustic.Value = True Then
+            
+        End If
+        
+        i = i + 1
+        
+'=======================================================================================================
+'For A and B room set
+    ElseIf Room.CheckBox1.Value = True And Room.CheckBox2.Value = True Then
+        Floor.Porcelain.Value = False
+        Floor.Quarry.Value = False
+        Floor.Existing.Value = False
+        Floor.show
+        Base.Coved.Value = False
+        Base.Porcelain.Value = False
+        Base.Existing.Value = False
+        Base.show
+        Walls.Vinyl.Value = False
+        Walls.Porcelain.Value = False
+        Walls.Epoxy.Value = False
+        Walls.Laminate.Value = False
+        Walls.Paint.Value = False
+        Walls.FRP.Value = False
+        Walls.Wallpaper.Value = False
+        Walls.Existing_Tile.Value = False
+        Walls.Existing.Value = False
+        Walls.show
+        Ceiling.Acoustic.Value = False
+        Ceiling.Vinyl.Value = False
+        Ceiling.Exist_Drywall.Value = False
+        Ceiling.Existing.Value = False
+        Ceiling.New_Drywall.Value = False
+        Ceiling.show
+        For i = i To i + 1
+            l = l + 1
+            For j = 0 To .Columns - 1
+            .SetCellTextHeight i, j, 4.5
+            .SetCellAlignment i, j, acMiddleCenter
+            .SetCellType i, j, acTextCell
+            .SetText i, 0, "113" & Chr$(64 + l)
+            .SetText i, 1, "WALK-IN FREEZER"
+        'Floor Finish Cells
+            If Floor.Porcelain.Value = True Then
+                .SetText i, 2, "\U+25CF"
+            ElseIf Floor.Quarry.Value = True Then
+                .SetText i, 3, "\U+25CF"
+            ElseIf Floor.Existing.Value = True Then
+                .SetText i, 5, "\U+25CF"
+            End If
+        'Base Finish Cells
+            If Base.Coved.Value = True Then
+                .SetText i, 7, "\U+25CF"
+            ElseIf Base.Porcelain.Value = True Then
+                .SetText i, 8, "\U+25CF"
+            ElseIf Base.Existing.Value = True Then
+                .SetText i, 9, "\U+25CF"
+            End If
+        'Wall Finish Cells
+            If Walls.Vinyl.Value = True Then
+                .SetText i, 10, "\U+25CF"
+            End If
+            If Walls.Porcelain.Value = True Then
+                .SetText i, 11, "\U+25CF"
+            End If
+            If Walls.Epoxy.Value = True Then
+                .SetText i, 12, "\U+25CF"
+            End If
+            If Walls.Laminate.Value = True Then
+                .SetText i, 13, "\U+25CF"
+            End If
+            If Walls.Paint.Value = True Then
+                .SetText i, 14, "\U+25CF"
+            End If
+            If Walls.FRP.Value = True Then
+                .SetText i, 15, "\U+25CF"
+            End If
+            If Walls.Wallpaper.Value = True Then
+                .SetText i, 16, "\U+25CF"
+            End If
+            If Walls.Existing_Tile.Value = True Then
+                .SetText i, 17, "\U+25CF"
+            End If
+            If Walls.Existing.Value = True Then
+                .SetText i, 18, "\U+25CF"
+            End If
+        'Ceiling Finish Cells
+            If Ceiling.Acoustic.Value = True Then
+                .SetText i, 19, "\U+25CF"
+            End If
+            If Ceiling.Vinyl.Value = True Then
+                .SetText i, 20, "\U+25CF"
+            End If
+            If Ceiling.Exist_Drywall.Value = True Then
+                .SetText i, 21, "\U+25CF"
+            End If
+            If Ceiling.Existing.Value = True Then
+                .SetText i, 22, "\U+25CF"
+            End If
+            If Ceiling.New_Drywall.Value = True Then
+                .SetText i, 23, "\U+25CF"
+            End If
+        'Ceiling Height Cell
+            .SetText i, 24, "EXIST."
+            Next
+        Next
+    l = 0
+    End If
+  
+'=======================================================================================================
+    'Deletes all unused rows
+    .DeleteRows i, .Rows - 1
+
+'=======================================================================================================
+    ' set color for grid
+    'TITLE
+        col.SetRGB 255, 0, 255
+        .SetGridColor AcGridLineType.acHorzBottom, AcRowType.acTitleRow, col
+        .SetGridColor AcGridLineType.acHorzInside, AcRowType.acTitleRow, col
+        .SetGridColor AcGridLineType.acHorzTop, AcRowType.acTitleRow, col
+        .SetGridColor AcGridLineType.acVertInside, AcRowType.acTitleRow, col
+        .SetGridColor AcGridLineType.acVertLeft, AcRowType.acTitleRow, col
+        .SetGridColor AcGridLineType.acVertRight, AcRowType.acTitleRow, col
+    'HEADER
+        col.SetRGB 255, 0, 255
+        .SetGridColor AcGridLineType.acHorzTop, AcRowType.acHeaderRow, col
+        .SetGridColor AcGridLineType.acVertLeft, AcRowType.acHeaderRow, col
+        .SetGridColor AcGridLineType.acVertRight, AcRowType.acHeaderRow, col
+        col.SetRGB 0, 255, 255
+        .SetGridColor AcGridLineType.acHorzBottom, AcRowType.acHeaderRow, col
+        .SetGridColor AcGridLineType.acHorzInside, AcRowType.acHeaderRow, col
+        .SetGridColor AcGridLineType.acVertInside, AcRowType.acHeaderRow, col
+    'ROW
+        col.SetRGB 255, 0, 255
+        .SetGridColor AcGridLineType.acHorzBottom, AcRowType.acDataRow, col
+        .SetGridColor AcGridLineType.acVertLeft, AcRowType.acDataRow, col
+        .SetGridColor AcGridLineType.acVertRight, AcRowType.acDataRow, col
+        col.SetRGB 0, 255, 255
+        .SetGridColor AcGridLineType.acHorzInside, AcRowType.acDataRow, col
+        .SetGridColor AcGridLineType.acHorzTop, AcRowType.acDataRow, col
+        col.SetRGB 255, 255, 0
+        .SetGridColor AcGridLineType.acVertInside, AcRowType.acDataRow, col
+    
+    'set line weights for grid
+        .SetGridLineWeight AcGridLineType.acVertLeft, AcRowType.acTitleRow, AcLineWeight.acLnWtByLayer
+        .SetGridLineWeight AcGridLineType.acVertRight, AcRowType.acTitleRow, AcLineWeight.acLnWtByLayer
+        .SetGridLineWeight AcGridLineType.acHorzTop, AcRowType.acTitleRow, AcLineWeight.acLnWtByLayer
+        .SetGridLineWeight AcGridLineType.acHorzBottom, AcRowType.acHeaderRow, AcLineWeight.acLnWtByLayer
+        .SetGridLineWeight AcGridLineType.acHorzInside, AcRowType.acHeaderRow, AcLineWeight.acLnWtByLayer
+        .SetGridLineWeight AcGridLineType.acHorzTop, AcRowType.acHeaderRow, AcLineWeight.acLnWtByLayer
+        .SetGridLineWeight AcGridLineType.acVertInside, AcRowType.acHeaderRow, AcLineWeight.acLnWtByLayer
+        .SetGridLineWeight AcGridLineType.acVertLeft, AcRowType.acHeaderRow, AcLineWeight.acLnWtByLayer
+        .SetGridLineWeight AcGridLineType.acVertRight, AcRowType.acHeaderRow, AcLineWeight.acLnWtByLayer
+        .SetGridLineWeight AcGridLineType.acHorzBottom, AcRowType.acDataRow, AcLineWeight.acLnWtByLayer
+        .SetGridLineWeight AcGridLineType.acHorzInside, AcRowType.acDataRow, AcLineWeight.acLnWtByLayer
+        .SetGridLineWeight AcGridLineType.acHorzTop, AcRowType.acDataRow, AcLineWeight.acLnWtByLayer
+        .SetGridLineWeight AcGridLineType.acVertInside, AcRowType.acDataRow, AcLineWeight.acLnWtByLayer
+        .SetGridLineWeight AcGridLineType.acVertLeft, AcRowType.acDataRow, AcLineWeight.acLnWtByLayer
+        .SetGridLineWeight AcGridLineType.acVertRight, AcRowType.acDataRow, AcLineWeight.acLnWtByLayer
+
+'=======================================================================================================
+    .RegenerateTableSuppressed = False
+    .RecomputeTableBlock True
+    .Update
+
+    .GetBoundingBox minp, maxp
+    ZoomWindow minp, maxp
+    ZoomScaled 0.9, acZoomScaledRelative
+
+Set col = Nothing
+
+End With
+
+End Sub
+
+Private Sub Class_Initialize()
+    
+End Sub
